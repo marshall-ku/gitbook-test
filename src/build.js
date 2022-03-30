@@ -5,9 +5,10 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
+import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
+import config from "./config.js";
 
-const TITLE_OF_PROJECT = "클린 코드 스터디";
 const DOCS_DIR = path.resolve("./docs");
 const OUTPUT_DIR = path.resolve("./dist");
 const NAVIGATION = `<ul>${fs
@@ -17,14 +18,14 @@ const NAVIGATION = `<ul>${fs
         const [numA] = a.match(regex) || [-1];
         const [numB] = b.match(regex) || [-1];
 
-        return numA - numB;
+        return +numA - +numB;
     })
     .map((file) => {
         const extension = path.extname(file);
         const name = path.basename(file, extension);
 
         if (name === "index") {
-            return `<li><a href="/">${TITLE_OF_PROJECT}</a></li>`;
+            return `<li><a href="/">${config.defaultTitle}</a></li>`;
         }
 
         return `<li><a href="/${encodeURIComponent(
@@ -41,7 +42,7 @@ function parseInfo(regexMatchGroup, fileName) {
     const defaultValue = {
         title: fileName,
         author: "Anonymous",
-        date: Date.now(),
+        date: `${new Date().toISOString()}`,
     };
 
     if (!regexMatchGroup) {
@@ -70,7 +71,8 @@ async function createFile({ fileName, content, info }) {
         .replace("<!-- TITLE -->", title)
         .replace("<!-- DATE -->", date)
         .replace("<!-- AUTHOR -->", author)
-        .replace("<!-- NAVIGATION -->", NAVIGATION);
+        .replace("<!-- NAVIGATION -->", NAVIGATION)
+        .replace(/(src|href)="\//g, `$1="${config.baseURL}`);
 
     fs.writeFileSync(path.resolve(OUTPUT_DIR, fileName), templated);
 }
@@ -79,16 +81,17 @@ async function parseFile(fileName) {
     const commentsRegex = /^<!--((.|\r?\n)*)-->$/gm;
     const data = fs.readFileSync(path.resolve(DOCS_DIR, fileName), "utf-8");
     const parsed = await unified()
-        .use(remarkToc, { heading: "Contents" })
         .use(remarkParse)
+        .use(remarkToc, { heading: "Contents" })
         .use(remarkRehype)
+        .use(rehypeSlug)
         .use(remarkGfm)
         .use(rehypeStringify)
         .process(data);
 
     createFile({
         fileName: `${path.basename(fileName, path.extname(fileName))}.html`,
-        content: parsed,
+        content: `${parsed}`,
         info: parseInfo(data.match(commentsRegex), fileName),
     });
 }

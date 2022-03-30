@@ -23,6 +23,8 @@ console.log(a + b);
 
 Returns 3
 
+![태연 INVU](/images/INVU10.jpg)
+
 ### 제목: 1 - 2
 
 | Test | Test |
