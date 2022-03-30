@@ -38,12 +38,13 @@ const TEMPLATE = fs.readFileSync(
     "utf-8"
 );
 
-async function createFile({ fileName, content, info }) {
+async function createFile({ fileName, content, toc, info }) {
     const { title, author, date } = info;
     const templated = TEMPLATE.replace("<!-- CONTENT -->", content)
         .replace("<!-- TITLE -->", title)
         .replace("<!-- DATE -->", date)
         .replace("<!-- AUTHOR -->", author)
+        .replace("<!-- TOC -->", toc)
         .replace("<!-- NAVIGATION -->", NAVIGATION)
         .replace(/(src|href)="\//g, `$1="${config.baseURL}`);
 
@@ -79,20 +80,25 @@ function parseInfo(regexMatchGroup, fileName) {
 
 async function parseFile(fileName) {
     const commentsRegex = /^<!--((.|\r?\n)*)-->$/gm;
+    const tocRegex =
+        /<h2 id="contents">Contents<\/h2>\r?\n<ul>((.|\r?\n)*)<\/ul>/gm;
     const data = fs.readFileSync(path.resolve(DOCS_DIR, fileName), "utf-8");
-    const parsed = await unified()
+    const parsed = `${await unified()
         .use(remarkParse)
         .use(remarkToc, { heading: "Contents" })
         .use(remarkRehype)
         .use(rehypeSlug)
         .use(remarkGfm)
         .use(rehypeStringify)
-        .process(data);
+        .process(data)}`;
+    const [, matchesToc] = tocRegex.exec(parsed) || [""];
+    const toc = matchesToc ? `<ul class="toc">${matchesToc}</ul>` : "";
 
     createFile({
         fileName: `${path.basename(fileName, path.extname(fileName))}.html`,
-        content: `${parsed}`,
+        content: parsed.replace(tocRegex, ""),
         info: parseInfo(data.match(commentsRegex), fileName),
+        toc,
     });
 }
 
