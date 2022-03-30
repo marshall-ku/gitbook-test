@@ -38,6 +38,18 @@ const TEMPLATE = fs.readFileSync(
     "utf-8"
 );
 
+async function createFile({ fileName, content, info }) {
+    const { title, author, date } = info;
+    const templated = TEMPLATE.replace("<!-- CONTENT -->", content)
+        .replace("<!-- TITLE -->", title)
+        .replace("<!-- DATE -->", date)
+        .replace("<!-- AUTHOR -->", author)
+        .replace("<!-- NAVIGATION -->", NAVIGATION)
+        .replace(/(src|href)="\//g, `$1="${config.baseURL}`);
+
+    fs.writeFileSync(path.resolve(OUTPUT_DIR, fileName), templated);
+}
+
 function parseInfo(regexMatchGroup, fileName) {
     const defaultValue = {
         title: fileName,
@@ -63,18 +75,6 @@ function parseInfo(regexMatchGroup, fileName) {
                 .map(([key, value]) => [key.trim(), value.trim()])
         ),
     };
-}
-
-async function createFile({ fileName, content, info }) {
-    const { title, author, date } = info;
-    const templated = TEMPLATE.replace("<!-- CONTENT -->", content)
-        .replace("<!-- TITLE -->", title)
-        .replace("<!-- DATE -->", date)
-        .replace("<!-- AUTHOR -->", author)
-        .replace("<!-- NAVIGATION -->", NAVIGATION)
-        .replace(/(src|href)="\//g, `$1="${config.baseURL}`);
-
-    fs.writeFileSync(path.resolve(OUTPUT_DIR, fileName), templated);
 }
 
 async function parseFile(fileName) {
