@@ -33,7 +33,7 @@ const NAVIGATION = `<ul>${fs
     })
     .reduce((acc, cur) => acc + cur, "")}</ul>`;
 const TEMPLATE = fs.readFileSync(
-    path.resolve("./template/index.html"),
+    path.resolve("./src/template/index.html"),
     "utf-8"
 );
 
