@@ -23,8 +23,8 @@ const NAVIGATION = `<ul>${fs
         const extension = path.extname(file);
         const name = path.basename(file, extension);
 
-        if (name === "index") {
-            return `<li><a href="/".html">${TITLE_OF_PROJECT}</a></li>`;
+        if (name === "README") {
+            return `<li><a href="/">${TITLE_OF_PROJECT}</a></li>`;
         }
 
         return `<li><a href="/${encodeURIComponent(
