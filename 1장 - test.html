@@ -5,13 +5,44 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>asdf</title>
+        <link rel="preconnect" async href="https://fonts.googleapis.com" />
+        <link
+            rel="preconnect"
+            async
+            href="https://fonts.gstatic.com"
+            crossorigin
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" async href="/gitbook-test/reset.css" />
+        <link rel="stylesheet" async href="/gitbook-test/icon.css" />
+        <link rel="stylesheet" async href="/gitbook-test/style.css" />
     </head>
     <body>
-        <nav>
-            <ul><li><a href="/gitbook-test/">클린 코드 스터디</a></li><li><a href="/gitbook-test/1%EC%9E%A5%20-%20test.html">1장 - test</a></li><li><a href="/gitbook-test/2%EC%9E%A5%20-%20test%20again.html">2장 - test again</a></li><li><a href="/gitbook-test/12%EC%9E%A5%20-%20chapter%20test.html">12장 - chapter test</a></li></ul>
+        <div class="masthead">
+            <div class="masthead__inner">
+                <div class="masthead__grow masthead__left">
+                    <button
+                        class="drawer-opener icon-menu"
+                        aria-label="메뉴 보기"
+                    ></button>
+                </div>
+                <div class="masthead__center">asdf</div>
+                <div class="masthead__grow masthead__right">
+                    <button
+                        class="toc-opener icon-bookmark_outline"
+                        aria-label="목차 보기"
+                    ></button>
+                </div>
+            </div>
+        </div>
+        <nav class="global-navigation">
+            <ul><li><a href="/gitbook-test/">클린 코드 스터디</a></li><li class="highlight"><a href="/gitbook-test/1%EC%9E%A5%20-%20test.html">1장 - test</a></li$><li><a href="/gitbook-test/2%EC%9E%A5%20-%20test%20again.html">2장 - test again</a></li$><li><a href="/gitbook-test/12%EC%9E%A5%20-%20chapter%20test.html">12장 - chapter test</a></li$></ul>
         </nav>
         <main>
-            <article>
+            <article class="article">
                 <h1 id="제목입니다">제목입니다</h1>
 
 <h2 id="제목-1">제목: 1</h2>
@@ -47,7 +78,7 @@ console.log(a + b);
 <p>Sed ornare risus eu magna condimentum, eu convallis justo tristique. Nam id sapien sit amet felis lacinia efficitur. Nam vel mauris tortor. In id euismod lacus. Sed hendrerit lorem sit amet quam volutpat, sit amet luctus libero lacinia. Donec bibendum tellus ut placerat pretium. Nunc at tortor nec sem dictum cursus convallis sit amet purus.</p>
 <p>In ut sem nibh. Pellentesque sagittis elit at purus suscipit, id varius erat tempus. Maecenas tempus tempus sapien, quis maximus metus pellentesque ut. Vivamus purus ante, consequat vitae ornare ut, sodales ac nisi. Cras ornare ligula id pellentesque lacinia. Pellentesque a sollicitudin eros, sit amet sodales lorem. In auctor tempor lectus, at iaculis tellus aliquet nec. Pellentesque consectetur lectus nec eros gravida suscipit. Etiam porta dignissim mi, at pretium nulla varius at. Aliquam pellentesque urna id augue convallis, vel viverra felis varius.</p>
             </article>
-            <ul class="toc">
+            <div class="toc-container"><ul class="toc">
 <li>
 <p><a href="#%EC%A0%9C%EB%AA%A9-1">제목: 1</a></p>
 <ul>
@@ -58,7 +89,9 @@ console.log(a + b);
 <li>
 <p><a href="#%EC%A0%9C%EB%AA%A9-2">제목: 2</a></p>
 </li>
-</ul>
+</ul></div>
         </main>
+        <div class="closer"></div>
+        <script defer src="/gitbook-test/app.js"></script>
     </body>
 </html>
