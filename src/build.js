@@ -46,7 +46,7 @@ function createNavigation(fileNameWithExtension) {
     }).reduce((acc, cur) => acc + cur, "")}</ul>`;
 }
 
-async function createFile({ fileName, content, toc, info }) {
+function createFile({ fileName, content, toc, info }) {
     const { title, author, date, description } = info;
     const descriptionFromContent = content
         .replace(/<.+?>/gm, "")
@@ -62,7 +62,7 @@ async function createFile({ fileName, content, toc, info }) {
         .replace(/<!-- AUTHOR -->/gm, author)
         .replace(/<!-- TOC -->/gm, toc)
         .replace(/<!-- NAVIGATION -->/gm, createNavigation(fileName))
-        .replace(/(src|href)="\//g, `$1="${config.baseURL}`);
+        .replace(/(src=|href=|url\())"\//g, `$1="${config.baseURL}`);
 
     fs.writeFileSync(path.resolve(OUTPUT_DIR, fileName), templated);
 }
@@ -71,7 +71,7 @@ function parseInfo(regexMatchGroup, fileName) {
     const defaultValue = {
         title: fileName,
         author: "Anonymous",
-        date: `${new Date().toISOString()}`,
+        date: new Date().toISOString(),
         description: "",
     };
 
@@ -99,8 +99,6 @@ function addTocTitleToData(data) {
     const h1Regex = /^# .+/gm;
     const [matchHeading] = data.match(h1Regex) || [];
 
-    console.log(matchHeading);
-
     if (matchHeading) {
         return data.replace(h1Regex, `${matchHeading}\n## Table of contents\n`);
     }
@@ -121,7 +119,7 @@ async function parseFile(fileName) {
         .use(remarkGfm)
         .use(rehypeStringify)
         .process(addTocTitleToData(data))}`;
-    const [, matchesToc] = tocRegex.exec(parsed) || [""];
+    const [, matchesToc] = tocRegex.exec(parsed) || [];
     const toc = matchesToc
         ? `<div class="toc-container"><ul class="toc">${matchesToc}</ul></div>`
         : "";
@@ -134,7 +132,7 @@ async function parseFile(fileName) {
     });
 }
 
-async function main() {
+function main() {
     fs.mkdir(OUTPUT_DIR, { recursive: true }, (err) => {
         if (err) throw err;
     });
